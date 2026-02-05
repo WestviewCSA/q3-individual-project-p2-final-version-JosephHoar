@@ -1,3 +1,22 @@
 Questions:
 
 Write as many questions as you can based on the project specs.
+1. Are you going to teach us 3d arrays?[c]
+2. What is a 3d array?[o]
+3. Is the maze fixed or random?[c]
+4. Do we generate the maze?[c]
+5. When is this due?[c]
+6. How many points is this?[c]
+7. Do we need to do the optimal path?[c]
+8. Do we need to make visuals?[c]
+9. Will this be the whole rest of the quarter?[c]
+10. Is there a prize for the best code?[c]
+11. How many points is the EC?[c]
+12. If we do need to make visuals can we stylize them?[c]
+13. How much class time are we gonna get for this each day?[c]
+14. What is a linked list?[o]
+15. Are we going to do other projects in conjunction with this?[c]
+16. Are we going to need new datastructure types?[c]
+17. Are you going to teach new datastructure types for this?[c]
+18. Will the run time limit be subject to change?[c]
+19. What category does this go into for grading?[o]
