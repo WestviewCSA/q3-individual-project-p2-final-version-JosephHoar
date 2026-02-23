@@ -11,7 +11,7 @@ Write as many questions as you can based on the project specs.
 8. Do we need to make visuals?[c]
 9. Will this be the whole rest of the quarter?[c]
 10. Is there a prize for the best code?[c]
-11. How many points is the EC?[c]
+11. How many points is the Extra Credit?[c]
 12. If we do need to make visuals can we stylize them?[c]
 13. How much class time are we gonna get for this each day?[c]
 14. What is a linked list?[o]
