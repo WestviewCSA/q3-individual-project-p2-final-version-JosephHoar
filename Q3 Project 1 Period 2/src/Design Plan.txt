@@ -1,0 +1,12 @@
+Week 1:
+make sure i can read file properly to get regular map and coord map
+start working on queu based approach of algorithm
+Week 2: 
+finish queue based approach and make sure it works properly
+start working on stack based approach
+try to finish stack based approach so it works properly
+Week 3:
+start and try to finish optimal route code
+general clean up in code
+
+Overall: try to regularly push and commit and work on it at least partly daily
