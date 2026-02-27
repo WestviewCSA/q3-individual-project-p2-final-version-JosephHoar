@@ -75,10 +75,15 @@ public class FileRead {
 				for(int j = 0; j < h; j++) {
 					for(int k = 0; k < w; k++) {
 						String s = scan.next() + " " + j + " " + k + " " + i;
+						scan.next();
+						scan.next();
+						scan.next();
 						res[j][k][i] = s;
+						System.out.println(res[j][k][i]);
 					}
 				}
 			}
+			System.out.println();
 			return res;
 			
 		} catch (FileNotFoundException e) {
@@ -98,11 +103,11 @@ public class FileRead {
 		boolean start = false;
 		boolean found = false;
 		while(!found) {
-			while(!start) {
+			while(start == false) {
 				for(int i = 0; i < map[0][0].length; i++) {
 					for(int j = 0; j < map.length; j++) {
 						for(int k = 0; k < map[0].length; k++) {
-							if(map[j][k][i].startsWith("W") ) {
+							if(map[j][k][i].startsWith("W") && !visited.contains(map[j][k][i])) {
 								queue.add(map[j][k][i]);
 								a = j;
 								b = k;
@@ -115,14 +120,13 @@ public class FileRead {
 				start = true;
 			}
 			visited.add(queue.remove());
-			System.out.println(visited.get(d));
 			String[] e = visited.get(d).split(" ");
 			a = Integer.parseInt(e[1]);
 			b = Integer.parseInt(e[2]);
 			c = Integer.parseInt(e[3]);
 			d++;
-			if(a-1>= 0) {
-				if(!map[a-1][b][c].startsWith("@") && a-1>= 0 && !visited.contains(map[a-1][b][c])) {
+			if(a-1>= 0 && a < map.length) {
+				if(!map[a-1][b][c].startsWith("@") && !visited.contains(map[a-1][b][c]) && !queue.contains(map[a+1][b][c])) {
 					if(map[a-1][b][c].startsWith("$")) {
 						visited.add(map[a-1][b][c]);
 						found = true;
@@ -134,8 +138,8 @@ public class FileRead {
 					}
 				}
 			}
-			if(a + 1 < map.length) {
-				if(!map[a+1][b][c].startsWith("@") && a + 1 < map.length && !visited.contains(map[a+1][b][c])) {
+			if(a + 1 < map.length && a < map.length) {
+				if(!map[a+1][b][c].startsWith("@") && !visited.contains(map[a+1][b][c]) && !queue.contains(map[a+1][b][c])) {
 					if(map[a+1][b][c].startsWith("$")) {
 						visited.add(map[a+1][b][c]);
 						found = true;
@@ -147,8 +151,8 @@ public class FileRead {
 					}
 				}
 			}
-			if(b + 1 <map[0].length) {
-				if(!map[a][b+1][c].startsWith("@") && b + 1 <map[0].length && !visited.contains(map[a][b+1][c])) {
+			if(b + 1 < map[0].length && b < map[0].length) {
+				if(!map[a][b+1][c].startsWith("@")  && !visited.contains(map[a][b+1][c]) && !queue.contains(map[a][b+1][c])) {
 					if(map[a][b+1][c].startsWith("$")) {
 						visited.add(map[a][b+1][c]);
 						found = true;
@@ -160,8 +164,8 @@ public class FileRead {
 					}
 				}
 			}
-			if(b-1 > 0) {
-				if(!map[a][b-1][c].startsWith("@") && !visited.contains(map[a][b-1][c])) {
+			if(b-1 > 0 && b < map[0].length) {
+				if(!map[a][b-1][c].startsWith("@") && !visited.contains(map[a][b-1][c]) && !queue.contains(map[a][b-1][c])) {
 					if(map[a][b-1][c].startsWith("$")) {
 						visited.add(map[a][b-1][c]);
 						found = true;
