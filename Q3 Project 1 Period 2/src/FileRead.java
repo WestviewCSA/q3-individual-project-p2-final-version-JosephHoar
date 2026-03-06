@@ -93,9 +93,45 @@ public class FileRead {
 		}
 	
 	}
+	public static void checkup(String[][][] map, int a, int b, int c, LinkedList queue, ArrayList<String> visited, boolean found) {
+		if(!map[a-1][b][c].startsWith("@") && !visited.contains(map[a-1][b][c]) && !queue.contains(map[a-1][b][c])) {
+			if(map[a-1][b][c].startsWith("$")) {
+				found = true;
+			}else{
+				queue.add(map[a-1][b][c]);
+			}
+		}
+	}
+	public static void checkdown(String[][][] map, int a, int b, int c, LinkedList queue, ArrayList<String> visited, boolean found) {
+		if(!map[a+1][b][c].startsWith("@") && !visited.contains(map[a+1][b][c]) && !queue.contains(map[a+1][b][c])) {
+			if(map[a-1][b][c].startsWith("$")) {
+				found = true;
+			}else{
+				queue.add(map[a+1][b][c]);
+			}
+		}
+	}
+	public static void checkleft(String[][][] map, int a, int b, int c, LinkedList queue, ArrayList<String> visited, boolean found) {
+		if(!map[a][b+1][c].startsWith("@") && !visited.contains(map[a][b+1][c]) && !queue.contains(map[a][b+1][c])) {
+			if(map[a][b+1][c].startsWith("$")) {
+				found = true;
+			}else{
+				queue.add(map[a][b+1][c]);
+			}
+		}
+	}
+	public static void checkright(String[][][] map, int a, int b, int c, LinkedList queue, ArrayList<String> visited, boolean found) {
+		if(!map[a][b-1][c].startsWith("@") && !visited.contains(map[a][b-1][c]) && !queue.contains(map[a][b-1][c])) {
+			if(map[a-1][b][c].startsWith("$")) {
+				found = true;
+			}else{
+				queue.add(map[a][b-1][c]);
+			}
+		}
+	}
 	public static ArrayList<String> queueRoute(String[][][] map){
 		ArrayList<String> visited = new ArrayList<String>();
-		Queue<String> queue = new LinkedList<>();
+		LinkedList<String> queue = new LinkedList<>();
 		int a = 0;
 		int b = 0;
 		int c = 0;
@@ -126,56 +162,16 @@ public class FileRead {
 			c = Integer.parseInt(e[3]);
 			d++;
 			if(a-1>= 0 && a < map.length) {
-				if(!map[a-1][b][c].startsWith("@") && !visited.contains(map[a-1][b][c]) && !queue.contains(map[a+1][b][c])) {
-					if(map[a-1][b][c].startsWith("$")) {
-						visited.add(map[a-1][b][c]);
-						found = true;
-					}else if(map[a-1][b][c].startsWith("|")) {
-						visited.add(map[a-1][b][c]);
-						start = false;
-					}else{
-						queue.add(map[a-1][b][c]);
-					}
-				}
+				checkup(map,a,b,c,queue,visited,found);
 			}
 			if(a + 1 < map.length && a < map.length) {
-				if(!map[a+1][b][c].startsWith("@") && !visited.contains(map[a+1][b][c]) && !queue.contains(map[a+1][b][c])) {
-					if(map[a+1][b][c].startsWith("$")) {
-						visited.add(map[a+1][b][c]);
-						found = true;
-					}else if(map[a+1][b][c].startsWith("|")) {
-						queue.add(map[a+1][b][c]);
-						start = false;
-					}else {
-						queue.add(map[a+1][b][c]);
-					}
-				}
+				checkdown(map,a,b,c,queue,visited,found);
 			}
 			if(b + 1 < map[0].length && b < map[0].length) {
-				if(!map[a][b+1][c].startsWith("@")  && !visited.contains(map[a][b+1][c]) && !queue.contains(map[a][b+1][c])) {
-					if(map[a][b+1][c].startsWith("$")) {
-						visited.add(map[a][b+1][c]);
-						found = true;
-					}else if(map[a][b+1][c].startsWith("|")) {
-						queue.add(map[a][b+1][c]);
-						start = false;
-					}else {
-						queue.add(map[a][b+1][c]);
-					}
-				}
+				checkleft(map,a,b,c,queue,visited,found);
 			}
 			if(b-1 > 0 && b < map[0].length) {
-				if(!map[a][b-1][c].startsWith("@") && !visited.contains(map[a][b-1][c]) && !queue.contains(map[a][b-1][c])) {
-					if(map[a][b-1][c].startsWith("$")) {
-						visited.add(map[a][b-1][c]);
-						found = true;
-					}else if(map[a][b-1][c].startsWith("|")) {
-						queue.add(map[a][b-1][c]);
-						start = false;
-					}else {
-						queue.add(map[a][b-1][c]);
-					}
-				}
+				checkright(map,a,b,c,queue,visited,found);
 			}
 			
 		}
