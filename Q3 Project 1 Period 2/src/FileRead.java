@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class FileRead {
 
@@ -13,7 +14,7 @@ public class FileRead {
 			File mapa = new File(args[0]);
 			String[][][] coorda = file(mapa);
 			if(coorda != null) {
-				queueRoute(co(coorda));
+				stackRoute(co(coorda));
 				//cords(coorda);
 			}
 		}else {
@@ -171,6 +172,87 @@ public class FileRead {
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(s) && !visited.contains(s)) {
 						queue.add(s);
+					}
+				}
+			}
+			
+		}
+		System.out.println(visited);
+		return visited;
+	}
+	public static ArrayList<String> stackRoute(String[][][] map){
+		Stack<String> stack = new Stack<String>();
+		ArrayList<String> visited = new ArrayList<String>();
+		int a = 0;
+		int b = 0;
+		int c = 0;
+		int d = 0;
+		boolean start = false;
+		boolean found = false;
+		while(found == false) {
+			if(!start) {
+				stack.push(findStart(map, a, b, c));
+				start = true;
+			}
+			if(!stack.isEmpty()) {
+				visited.add(stack.pop());
+				String[] e = visited.get(d).split(" ");
+				a = Integer.parseInt(e[1]);
+				b = Integer.parseInt(e[2]);
+				c = Integer.parseInt(e[3]);
+				System.out.println(visited.get(d));
+				d++;
+				if(e[0].equals("|")) {
+					start = false;
+					c++;
+					continue;
+				}
+			}
+			if(a-1>= 0 && a < map.length) {
+				String s = checkup(map,a,b,c);
+				if(s.startsWith("$")) {
+					found = true;
+					break;
+				}
+				if(s.startsWith(".") || s.startsWith("|")) {
+					if(!stack.contains(s) && !visited.contains(s)) {
+						stack.push(s);
+					}
+				}
+			}
+			if(a + 1 < map.length && a < map.length) {
+				String s = checkdown(map,a,b,c);
+				if(s.startsWith("$")) {
+					found = true;
+					break;
+				}
+				if(s.startsWith(".") || s.startsWith("|")) {
+					if(!stack.contains(s) && !visited.contains(s)) {
+						stack.push(s);
+					}
+				}
+			}
+			if(b + 1 < map[0].length && b < map[0].length) {
+				String s = checkleft(map,a,b,c);
+				if(s.startsWith("$")) {
+					found = true;
+					break;
+				}
+				if(s.startsWith(".") || s.startsWith("|")) {
+					if(!stack.contains(s) && !visited.contains(s)) {
+						stack.push(s);
+					}
+				}
+			}
+			if(b-1 > 0 && b < map[0].length) {
+				String s = checkright(map,a,b,c);
+				if(s.startsWith("$")) {
+					found = true;
+					break;
+				}
+				if(s.startsWith(".") || s.startsWith("|")) {
+					if(!stack.contains(s) && !visited.contains(s)) {
+						stack.push(s);
 					}
 				}
 			}
