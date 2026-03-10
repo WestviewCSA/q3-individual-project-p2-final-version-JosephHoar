@@ -13,8 +13,8 @@ public class FileRead {
 			File mapa = new File(args[0]);
 			String[][][] coorda = file(mapa);
 			if(coorda != null) {
-				queueRoute(co(mapa));
-				cords(coorda);
+				queueRoute(co(coorda));
+				//cords(coorda);
 			}
 		}else {
 			System.out.println("File Not Found");
@@ -54,80 +54,49 @@ public class FileRead {
 				for(int k = 0; k < a[0].length; k++) {
 					String c = a[j][k][i] + " " + j + " " + k + " " + i;
 					b.add(c);
-					System.out.println(c);
+					//System.out.println(c);
 				}
 			}
 		}
 		return b;
 		
 	}
-	public static String[][][] co(File map){
-		try {
-			Scanner scan = new Scanner(map);
-			int h = scan.nextInt();
-			int w = scan.nextInt();
-			int l = scan.nextInt();
-			String[][][] res = new String[h][w][l];
-			for(int i = 0; i < h*l + l; i++) {
-				scan.nextLine();
-			}
-			for(int i = 0; i < l; i++) {
-				for(int j = 0; j < h; j++) {
-					for(int k = 0; k < w; k++) {
-						String s = scan.next() + " " + j + " " + k + " " + i;
-						scan.next();
-						scan.next();
-						scan.next();
-						res[j][k][i] = s;
-						System.out.println(res[j][k][i]);
-					}
+	public static String[][][] co(String [][][] map){
+		String[][][] res = new String[map.length][map[0].length][map[0][0].length];
+		for(int i = 0; i < map[0][0].length; i++) {
+			for(int j = 0; j < map.length; j++) {
+				for(int k = 0; k < map[0].length; k++) {
+					String s = map[j][k][i] + " " + j + " " + k + " " + i;
+					res[j][k][i] = s;
+						//System.out.println(res[j][k][i]);
 				}
 			}
-			System.out.println();
-			return res;
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
 		}
+		return res;
 	
 	}
-	public static void checkup(String[][][] map, int a, int b, int c, LinkedList queue, ArrayList<String> visited, boolean found) {
-		if(!map[a-1][b][c].startsWith("@") && !visited.contains(map[a-1][b][c]) && !queue.contains(map[a-1][b][c])) {
-			if(map[a-1][b][c].startsWith("$")) {
-				found = true;
-			}else{
-				queue.add(map[a-1][b][c]);
-			}
-		}
+	public static String checkup(String[][][] map, int a, int b, int c) {
+		return map[a-1][b][c];
 	}
-	public static void checkdown(String[][][] map, int a, int b, int c, LinkedList queue, ArrayList<String> visited, boolean found) {
-		if(!map[a+1][b][c].startsWith("@") && !visited.contains(map[a+1][b][c]) && !queue.contains(map[a+1][b][c])) {
-			if(map[a-1][b][c].startsWith("$")) {
-				found = true;
-			}else{
-				queue.add(map[a+1][b][c]);
-			}
-		}
+	public static String checkdown(String[][][] map, int a, int b, int c) {
+		return map[a+1][b][c];
 	}
-	public static void checkleft(String[][][] map, int a, int b, int c, LinkedList queue, ArrayList<String> visited, boolean found) {
-		if(!map[a][b+1][c].startsWith("@") && !visited.contains(map[a][b+1][c]) && !queue.contains(map[a][b+1][c])) {
-			if(map[a][b+1][c].startsWith("$")) {
-				found = true;
-			}else{
-				queue.add(map[a][b+1][c]);
-			}
-		}
+	public static String checkleft(String[][][] map, int a, int b, int c) {
+		return map[a][b+1][c];
 	}
-	public static void checkright(String[][][] map, int a, int b, int c, LinkedList queue, ArrayList<String> visited, boolean found) {
-		if(!map[a][b-1][c].startsWith("@") && !visited.contains(map[a][b-1][c]) && !queue.contains(map[a][b-1][c])) {
-			if(map[a-1][b][c].startsWith("$")) {
-				found = true;
-			}else{
-				queue.add(map[a][b-1][c]);
+	public static String checkright(String[][][] map, int a, int b, int c) {
+		return map[a][b-1][c];
+	}
+	public static String findStart(String[][][] map, int a, int b, int c) {
+		for(int j = 0; j < map.length; j++) {
+			for(int k = 0; k < map[0].length; k++) {
+				if(map[j][k][c].startsWith("W")) {
+					a = j;
+					b = k;
+				}
 			}
 		}
+		return map[a][b][c];
 	}
 	public static ArrayList<String> queueRoute(String[][][] map){
 		ArrayList<String> visited = new ArrayList<String>();
@@ -138,40 +107,72 @@ public class FileRead {
 		int d = 0;
 		boolean start = false;
 		boolean found = false;
-		while(!found) {
-			while(start == false) {
-				for(int i = 0; i < map[0][0].length; i++) {
-					for(int j = 0; j < map.length; j++) {
-						for(int k = 0; k < map[0].length; k++) {
-							if(map[j][k][i].startsWith("W") && !visited.contains(map[j][k][i])) {
-								queue.add(map[j][k][i]);
-								a = j;
-								b = k;
-								c = i;
-								break;
-							}
-						}
-					}
-				}
+		while(found == false) {
+			if(!start) {
+				queue.add(findStart(map, a, b, c));
 				start = true;
 			}
-			visited.add(queue.remove());
-			String[] e = visited.get(d).split(" ");
-			a = Integer.parseInt(e[1]);
-			b = Integer.parseInt(e[2]);
-			c = Integer.parseInt(e[3]);
-			d++;
+			if(!queue.isEmpty()) {
+				visited.add(queue.remove());
+				String[] e = visited.get(d).split(" ");
+				a = Integer.parseInt(e[1]);
+				b = Integer.parseInt(e[2]);
+				c = Integer.parseInt(e[3]);
+				System.out.println(visited.get(d));
+				d++;
+				if(e[0].equals("|")) {
+					start = false;
+					c++;
+					continue;
+				}
+			}
 			if(a-1>= 0 && a < map.length) {
-				checkup(map,a,b,c,queue,visited,found);
+				String s = checkup(map,a,b,c);
+				if(s.startsWith("$")) {
+					found = true;
+					break;
+				}
+				if(s.startsWith(".") || s.startsWith("|")) {
+					if(!queue.contains(s) && !visited.contains(s)) {
+						queue.add(s);
+					}
+				}
 			}
 			if(a + 1 < map.length && a < map.length) {
-				checkdown(map,a,b,c,queue,visited,found);
+				String s = checkdown(map,a,b,c);
+				if(s.startsWith("$")) {
+					found = true;
+					break;
+				}
+				if(s.startsWith(".") || s.startsWith("|")) {
+					if(!queue.contains(s) && !visited.contains(s)) {
+						queue.add(s);
+					}
+				}
 			}
 			if(b + 1 < map[0].length && b < map[0].length) {
-				checkleft(map,a,b,c,queue,visited,found);
+				String s = checkleft(map,a,b,c);
+				if(s.startsWith("$")) {
+					found = true;
+					break;
+				}
+				if(s.startsWith(".") || s.startsWith("|")) {
+					if(!queue.contains(s) && !visited.contains(s)) {
+						queue.add(s);
+					}
+				}
 			}
 			if(b-1 > 0 && b < map[0].length) {
-				checkright(map,a,b,c,queue,visited,found);
+				String s = checkright(map,a,b,c);
+				if(s.startsWith("$")) {
+					found = true;
+					break;
+				}
+				if(s.startsWith(".") || s.startsWith("|")) {
+					if(!queue.contains(s) && !visited.contains(s)) {
+						queue.add(s);
+					}
+				}
 			}
 			
 		}
