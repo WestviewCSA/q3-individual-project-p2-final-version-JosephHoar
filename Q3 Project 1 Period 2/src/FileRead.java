@@ -14,7 +14,7 @@ public class FileRead {
 			File mapa = new File(args[0]);
 			String[][][] coorda = file(mapa);
 			if(coorda != null) {
-				stackRoute(co(coorda));
+				route(coorda,stackRoute(co(coorda)));
 				//cords(coorda);
 			}
 		}else {
@@ -82,10 +82,10 @@ public class FileRead {
 	public static String checkdown(String[][][] map, int a, int b, int c) {
 		return map[a+1][b][c];
 	}
-	public static String checkleft(String[][][] map, int a, int b, int c) {
+	public static String checkright(String[][][] map, int a, int b, int c) {
 		return map[a][b+1][c];
 	}
-	public static String checkright(String[][][] map, int a, int b, int c) {
+	public static String checkleft(String[][][] map, int a, int b, int c) {
 		return map[a][b-1][c];
 	}
 	public static String findStart(String[][][] map, int a, int b, int c) {
@@ -152,7 +152,7 @@ public class FileRead {
 				}
 			}
 			if(b + 1 < map[0].length && b < map[0].length) {
-				String s = checkleft(map,a,b,c);
+				String s = checkright(map,a,b,c);
 				if(s.startsWith("$")) {
 					found = true;
 					break;
@@ -163,8 +163,8 @@ public class FileRead {
 					}
 				}
 			}
-			if(b-1 > 0 && b < map[0].length) {
-				String s = checkright(map,a,b,c);
+			if(b-1 >= 0 && b < map[0].length) {
+				String s = checkleft(map,a,b,c);
 				if(s.startsWith("$")) {
 					found = true;
 					break;
@@ -233,7 +233,7 @@ public class FileRead {
 				}
 			}
 			if(b + 1 < map[0].length && b < map[0].length) {
-				String s = checkleft(map,a,b,c);
+				String s = checkright(map,a,b,c);
 				if(s.startsWith("$")) {
 					found = true;
 					break;
@@ -244,8 +244,8 @@ public class FileRead {
 					}
 				}
 			}
-			if(b-1 > 0 && b < map[0].length) {
-				String s = checkright(map,a,b,c);
+			if(b-1 >= 0 && b < map[0].length) {
+				String s = checkleft(map,a,b,c);
 				if(s.startsWith("$")) {
 					found = true;
 					break;
@@ -261,5 +261,25 @@ public class FileRead {
 		System.out.println(visited);
 		return visited;
 	}
-
+	public static String[][][] route(String[][][] map, ArrayList<String> visited){
+		for(int i = 0; i < visited.size(); i++) {
+			String[] e = visited.get(i).split(" ");
+			int a = Integer.parseInt(e[1]);
+			int b = Integer.parseInt(e[2]);
+			int c = Integer.parseInt(e[3]);
+			map[a][b][c] = "+";
+		}
+		for(int j = 0; j < map[0][0].length; j++) {
+			for(int k = 0; k < map.length; k++) {
+				String d = "";
+				for(int l = 0; l < map[0].length; l++) {
+					d += map[k][l][j] + " ";
+				}
+				System.out.println(d);
+			}
+			System.out.println(" ");
+		}
+		return map;
+		
+	}
 }
