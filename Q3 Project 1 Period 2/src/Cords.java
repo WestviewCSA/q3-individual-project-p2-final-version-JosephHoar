@@ -5,12 +5,15 @@ public class Cords {
 	private int z;
 	private String symbol;
 	private Cords prev;
+	private int cost;
 	
 	public Cords(int xa, int ya, int za, String sym) {
 		x = xa;
 		y = ya;
 		z = za;
 		symbol = sym;
+		prev = null;
+		cost = 0;
 	}
 	public int getRow() {
 		return x;
@@ -32,6 +35,14 @@ public class Cords {
 	}
 	public void setSym(String symb) {
 		symbol = symb;
+	}
+	public void heuristic(Cords goal) {
+		int ca = Math.abs(goal.getCol() - getCol());
+		int cb = Math.abs(goal.getRow() - getRow());
+		cost = ca + cb;
+	}
+	public int getCost() {
+		return cost;
 	}
 
 }
