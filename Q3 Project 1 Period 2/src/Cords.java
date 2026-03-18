@@ -5,7 +5,8 @@ public class Cords {
 	private int z;
 	private String symbol;
 	private Cords prev;
-	private int cost;
+	private int h;
+	private int g;
 	
 	public Cords(int xa, int ya, int za, String sym) {
 		x = xa;
@@ -13,7 +14,8 @@ public class Cords {
 		z = za;
 		symbol = sym;
 		prev = null;
-		cost = 0;
+		h = 0;
+		g = 0;
 	}
 	public int getRow() {
 		return x;
@@ -36,13 +38,24 @@ public class Cords {
 	public void setSym(String symb) {
 		symbol = symb;
 	}
-	public void heuristic(Cords goal) {
+	public void calcH(Cords goal) {
 		int ca = Math.abs(goal.getCol() - getCol());
 		int cb = Math.abs(goal.getRow() - getRow());
-		cost = ca + cb;
+		h = ca + cb;
+		if(goal.getLayer() != getLayer()) {
+			h = 10000000;
+		}
+	}
+	public int getH() {
+		return h;
+	}
+	public void calcG(Cords Start) {
+		int ca = Math.abs(Start.getCol() - getCol());
+		int cb = Math.abs(Start.getRow() - getRow());
+		g = ca + cb;
 	}
 	public int getCost() {
-		return cost;
+		return h + g;
 	}
 
 }

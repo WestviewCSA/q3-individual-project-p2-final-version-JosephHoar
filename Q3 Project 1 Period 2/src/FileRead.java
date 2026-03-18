@@ -6,7 +6,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
-
+import java.util.Comparator;
 public class FileRead {
 
 	public static void main(String[] args) {
@@ -15,8 +15,7 @@ public class FileRead {
 			File mapa = new File(args[0]);
 			Cords[][][] coord = file(mapa);
 			if(coord != null) {
-				ArrayList<Cords> visited = stackRoute((coord));
-				route(coord,visited);
+				ArrayList<Cords> visited = AStar((coord));
 			}
 		}else {
 			System.out.println("File Not Found");
@@ -291,24 +290,31 @@ public class FileRead {
 		return visited;
 	}
 	public static ArrayList<Cords> AStar(Cords[][][] map){
-		ArrayList<Cords> visited = new ArrayList<Cords>();
-		Queue<Cords> queue = new PriorityQueue<>();
-		int lowc = 1000000000;
-		int layer = 0;
-		Cords goal = findGoal(map, layer);
 		int a = 0;
 		int b = 0;
 		int c = 0;
 		int d = 0;
-		boolean start = false;
+		Cords goal = findGoal(map, c);
+		Cords starts = findStart(map, a,b,c);
+		Comparator<Cords> comparator = new MyComparator();
+		ArrayList<Cords> visited = new ArrayList<Cords>();
+		Queue<Cords> queue = new PriorityQueue<>(10000000, comparator);
+		queue.add(starts);
+		boolean start = true;
 		boolean found = false;
 		while(found == false) {
 			if(!start) {
-				queue.add(findStart(map, a, b, c));
+				starts = findStart(map, a, b, c);
+				goal = findGoal(map, c);
+				queue.add(starts);
 				start = true;
 			}
 			if(!queue.isEmpty()) {
-				visited.add(queue.remove());
+				Cords see = (queue.poll());
+				while(see.getLayer() != goal.getLayer()) {
+					see = queue.poll();
+				}
+				visited.add(see);
 				Cords e = visited.get(d);
 				a = e.getRow();
 				b = e.getCol();
@@ -332,7 +338,8 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(co) && !visited.contains(co)) {
-						co.heuristic(goal);
+						co.calcG(starts);
+						co.calcH(goal);
 						queue.add(co);
 					}
 				}
@@ -347,7 +354,8 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(co) && !visited.contains(co)) {
-						co.heuristic(goal);
+						co.calcG(starts);
+						co.calcH(goal);
 						queue.add(co);
 					}
 				}
@@ -362,7 +370,8 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(co) && !visited.contains(co)) {
-						co.heuristic(goal);
+						co.calcG(starts);
+						co.calcH(goal);
 						queue.add(co);
 					}
 				}
@@ -377,13 +386,15 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(co) && !visited.contains(co)) {
-						co.heuristic(goal);
+						co.calcG(starts);
+						co.calcH(goal);
 						queue.add(co);
 					}
 				}
 			}
 			
 		}
+		route(map, visited);
 		return visited;
 		
 	}
