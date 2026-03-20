@@ -15,7 +15,7 @@ public class FileRead {
 			File mapa = new File(args[0]);
 			Cords[][][] coord = file(mapa);
 			if(coord != null) {
-				ArrayList<Cords> visited = AStar((coord));
+				ArrayList<Cords> visited = stackRoute((coord));
 			}
 		}else {
 			System.out.println("File Not Found");
@@ -32,15 +32,11 @@ public class FileRead {
 			Cords[][][] coords = new Cords[h][w][l];
 			for(int i = 0; i < l; i++) {
 				for(int j = 0; j < h; j++) {
-					String a = "";
 					for(int k = 0; k < w; k++) {
 						Cords loc = new Cords(j,k,i,scan.next());
 						coords[j][k][i] = loc;
-						a += loc.getSym() + " ";
 					}
-					System.out.println(a);
 				}
-				System.out.println(" ");
 			}
 			return coords;
 		} catch (FileNotFoundException e) {
@@ -117,11 +113,15 @@ public class FileRead {
 		int b = 0;
 		int c = 0;
 		int d = 0;
-		boolean start = false;
+		Cords starts = findStart(map,a,b,c);
+		starts.setPrev(null);
+		boolean start = true;
 		boolean found = false;
 		while(found == false) {
 			if(!start) {
-				queue.add(findStart(map, a, b, c));
+				starts = (findStart(map, a, b, c));
+				starts.setPrev(map[visited.get(d-1).getRow()][visited.get(d-1).getCol()][visited.get(d-1).getLayer()]);
+				queue.add(starts);
 				start = true;
 			}
 			if(!queue.isEmpty()) {
@@ -130,14 +130,13 @@ public class FileRead {
 				a = e.getRow();
 				b = e.getCol();
 				c = e.getLayer();
-				String s = e.getSym() + " " + a + " " + b + " " + c;
-				System.out.println(s);
 				d++;
 				if(e.getSym().equals("|")) {
 					start = false;
 					c++;
 					continue;
 				}
+				map[a][b][c] = e;
 			}
 			if(a-1>= 0 && a < map.length) {
 				Cords co = checkup(map,a,b,c);
@@ -197,7 +196,7 @@ public class FileRead {
 			}
 			
 		}
-		System.out.println(visited);
+		route(map,visited);
 		return visited;
 	}
 	public static ArrayList<Cords> stackRoute(Cords[][][] map){
@@ -207,11 +206,15 @@ public class FileRead {
 		int b = 0;
 		int c = 0;
 		int d = 0;
-		boolean start = false;
+		Cords starts = findStart(map,a,b,c);
+		starts.setPrev(null);
+		boolean start = true;
 		boolean found = false;
 		while(found == false) {
 			if(!start) {
-				stack.push(findStart(map, a, b, c));
+				starts = (findStart(map, a, b, c));
+				starts.setPrev(map[visited.get(d-1).getRow()][visited.get(d-1).getCol()][visited.get(d-1).getLayer()]);
+				stack.push(starts);
 				start = true;
 			}
 			if(!stack.isEmpty()) {
@@ -220,8 +223,6 @@ public class FileRead {
 				a = e.getRow();
 				b = e.getCol();
 				c = e.getLayer();
-				String s = e.getSym() + " " + a + " " + b + " " + c;
-				System.out.println(s);
 				d++;
 				if(e.getSym().equals("|")) {
 					start = false;
@@ -287,6 +288,7 @@ public class FileRead {
 			}
 			
 		}
+		route(map,visited);
 		return visited;
 	}
 	public static ArrayList<Cords> AStar(Cords[][][] map){
@@ -296,6 +298,7 @@ public class FileRead {
 		int d = 0;
 		Cords goal = findGoal(map, c);
 		Cords starts = findStart(map, a,b,c);
+		starts.setPrev(null);
 		Comparator<Cords> comparator = new MyComparator();
 		ArrayList<Cords> visited = new ArrayList<Cords>();
 		Queue<Cords> queue = new PriorityQueue<>(10000000, comparator);
@@ -305,6 +308,7 @@ public class FileRead {
 		while(found == false) {
 			if(!start) {
 				starts = findStart(map, a, b, c);
+				starts.setPrev(map[visited.get(d-1).getRow()][visited.get(d-1).getCol()][visited.get(d-1).getLayer()]);
 				goal = findGoal(map, c);
 				queue.add(starts);
 				start = true;
@@ -319,8 +323,6 @@ public class FileRead {
 				a = e.getRow();
 				b = e.getCol();
 				c = e.getLayer();
-				String s = e.getSym() + " " + a + " " + b + " " + c;
-				System.out.println(s);
 				d++;
 				if(e.getSym().equals("|")) {
 					start = false;
@@ -330,7 +332,7 @@ public class FileRead {
 			}
 			if(a-1>= 0 && a < map.length) {
 				Cords co = checkup(map,a,b,c);
-				co.setPrev(map[a][b][c]);
+				co.setPrev(visited.get(d-1));
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -346,7 +348,7 @@ public class FileRead {
 			}
 			if(a + 1 < map.length && a < map.length) {
 				Cords co = checkdown(map,a,b,c);
-				co.setPrev(map[a][b][c]);
+				co.setPrev(visited.get(d-1));
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -362,7 +364,7 @@ public class FileRead {
 			}
 			if(b + 1 < map[0].length && b < map[0].length) {
 				Cords co = checkright(map,a,b,c);
-				co.setPrev(map[a][b][c]);
+				co.setPrev(visited.get(d-1));
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -378,7 +380,7 @@ public class FileRead {
 			}
 			if(b-1 >= 0 && b < map[0].length) {
 				Cords co = checkleft(map,a,b,c);
-				co.setPrev(map[a][b][c]);
+				co.setPrev(visited.get(d-1));
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -394,22 +396,20 @@ public class FileRead {
 			}
 			
 		}
-		route(map, visited);
+		route(map,visited);
 		return visited;
 
 	}
-	public static void route(Cords[][][] map, ArrayList<Cords> visited){
-		boolean nn = true;
+	public static void route(Cords[][][] map, ArrayList<Cords> visited) {
 		Cords f = visited.get(visited.size()-1);
-		while(nn) {
-			int j = f.getRow();
-			int k = f.getCol();
-			int i = f.getLayer();
-			map[j][k][i].setSym("+");
-			if(f.getPrev() == null) {
-				nn = false;
-			}else {
-				f = map[j][k][i].getPrev();
+		for(int l = visited.size()-1; l >= 0; l--) {
+			if(visited.get(l).isSame(f)) {
+				int x = f.getRow();
+				int y = f.getCol();
+				int z = f.getLayer();
+				map[x][y][z].setSym("+");
+				System.out.println(f.getPrev());
+				f = f.getPrev();
 			}
 		}
 		for(int i = 0; i < map[0][0].length; i++) {
@@ -423,6 +423,7 @@ public class FileRead {
 			}
 			System.out.println(" ");
 		}
+		
 	}
 	
 }

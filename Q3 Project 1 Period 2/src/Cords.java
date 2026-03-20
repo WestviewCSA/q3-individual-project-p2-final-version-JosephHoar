@@ -57,5 +57,19 @@ public class Cords {
 	public int getCost() {
 		return h + g;
 	}
+	public boolean hasPrev() {
+		if(getPrev() == null) {
+			return false;
+		}else {
+			return true;
+		}
+	}
+	public boolean isSame(Cords i) {
+		if(i.getCol() == getCol() && i.getCol() == getRow() && i.getLayer() == getLayer()) {
+			return true;
+		}else {
+			return false;
+		}
+	}
 
 }
