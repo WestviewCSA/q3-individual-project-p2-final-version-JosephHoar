@@ -15,7 +15,7 @@ public class FileRead {
 			File mapa = new File(args[0]);
 			Cords[][][] coord = file(mapa);
 			if(coord != null) {
-				ArrayList<Cords> visited = stackRoute((coord));
+				ArrayList<Cords> visited = AStar(coord);
 			}
 		}else {
 			System.out.println("File Not Found");
@@ -114,6 +114,7 @@ public class FileRead {
 		int c = 0;
 		int d = 0;
 		Cords starts = findStart(map,a,b,c);
+		queue.add(starts);
 		starts.setPrev(null);
 		boolean start = true;
 		boolean found = false;
@@ -140,7 +141,6 @@ public class FileRead {
 			}
 			if(a-1>= 0 && a < map.length) {
 				Cords co = checkup(map,a,b,c);
-				co.setPrev(map[a][b][c]);
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -148,13 +148,13 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(co) && !visited.contains(co)) {
+						co.setPrev(visited.get(visited.size()-1));
 						queue.add(co);
 					}
 				}
 			}
 			if(a + 1 < map.length && a < map.length) {
 				Cords co = checkdown(map,a,b,c);
-				co.setPrev(map[a][b][c]);
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -162,13 +162,13 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(co) && !visited.contains(co)) {
+						co.setPrev(visited.get(visited.size()-1));
 						queue.add(co);
 					}
 				}
 			}
 			if(b + 1 < map[0].length && b < map[0].length) {
 				Cords co = checkright(map,a,b,c);
-				co.setPrev(map[a][b][c]);
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -176,13 +176,13 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(co) && !visited.contains(co)) {
+						co.setPrev(visited.get(visited.size()-1));
 						queue.add(co);
 					}
 				}
 			}
 			if(b-1 >= 0 && b < map[0].length) {
 				Cords co = checkleft(map,a,b,c);
-				co.setPrev(map[a][b][c]);
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -190,6 +190,7 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!queue.contains(co) && !visited.contains(co)) {
+						co.setPrev(visited.get(visited.size()-1));
 						queue.add(co);
 					}
 				}
@@ -208,6 +209,7 @@ public class FileRead {
 		int d = 0;
 		Cords starts = findStart(map,a,b,c);
 		starts.setPrev(null);
+		stack.push(starts);
 		boolean start = true;
 		boolean found = false;
 		while(found == false) {
@@ -218,7 +220,7 @@ public class FileRead {
 				start = true;
 			}
 			if(!stack.isEmpty()) {
-				visited.add(stack.pop());
+	            visited.add(stack.pop());
 				Cords e = visited.get(d);
 				a = e.getRow();
 				b = e.getCol();
@@ -228,11 +230,9 @@ public class FileRead {
 					start = false;
 					c++;
 					continue;
-				}
 			}
 			if(a-1>= 0 && a < map.length) {
 				Cords co = checkup(map,a,b,c);
-				co.setPrev(map[a][b][c]);
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -240,13 +240,13 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!stack.contains(co) && !visited.contains(co)) {
+						co.setPrev(visited.get(visited.size()-1));
 						stack.push(co);
 					}
 				}
 			}
 			if(a + 1 < map.length && a < map.length) {
 				Cords co = checkdown(map,a,b,c);
-				co.setPrev(map[a][b][c]);
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -254,13 +254,13 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!stack.contains(co) && !visited.contains(co)) {
+						co.setPrev(visited.get(visited.size()-1));
 						stack.push(co);
 					}
 				}
 			}
 			if(b + 1 < map[0].length && b < map[0].length) {
 				Cords co = checkright(map,a,b,c);
-				co.setPrev(map[a][b][c]);
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -268,13 +268,13 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!stack.contains(co) && !visited.contains(co)) {
+						co.setPrev(visited.get(visited.size()-1));
 						stack.push(co);
 					}
 				}
 			}
 			if(b-1 >= 0 && b < map[0].length) {
 				Cords co = checkleft(map,a,b,c);
-				co.setPrev(map[a][b][c]);
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -282,14 +282,16 @@ public class FileRead {
 				}
 				if(s.startsWith(".") || s.startsWith("|")) {
 					if(!stack.contains(co) && !visited.contains(co)) {
+						co.setPrev(visited.get(visited.size()-1));
 						stack.push(co);
 					}
 				}
 			}
-			
+			}
 		}
 		route(map,visited);
 		return visited;
+		
 	}
 	public static ArrayList<Cords> AStar(Cords[][][] map){
 		int a = 0;
@@ -332,7 +334,6 @@ public class FileRead {
 			}
 			if(a-1>= 0 && a < map.length) {
 				Cords co = checkup(map,a,b,c);
-				co.setPrev(visited.get(d-1));
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -342,13 +343,13 @@ public class FileRead {
 					if(!queue.contains(co) && !visited.contains(co)) {
 						co.calcG(starts);
 						co.calcH(goal);
+						co.setPrev(visited.get(visited.size()-1));
 						queue.add(co);
 					}
 				}
 			}
 			if(a + 1 < map.length && a < map.length) {
 				Cords co = checkdown(map,a,b,c);
-				co.setPrev(visited.get(d-1));
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -358,13 +359,13 @@ public class FileRead {
 					if(!queue.contains(co) && !visited.contains(co)) {
 						co.calcG(starts);
 						co.calcH(goal);
+						co.setPrev(visited.get(visited.size()-1));
 						queue.add(co);
 					}
 				}
 			}
 			if(b + 1 < map[0].length && b < map[0].length) {
 				Cords co = checkright(map,a,b,c);
-				co.setPrev(visited.get(d-1));
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -374,13 +375,13 @@ public class FileRead {
 					if(!queue.contains(co) && !visited.contains(co)) {
 						co.calcG(starts);
 						co.calcH(goal);
+						co.setPrev(visited.get(visited.size()-1));
 						queue.add(co);
 					}
 				}
 			}
 			if(b-1 >= 0 && b < map[0].length) {
 				Cords co = checkleft(map,a,b,c);
-				co.setPrev(visited.get(d-1));
 				String s = co.getSym();
 				if(s.startsWith("$")) {
 					found = true;
@@ -390,6 +391,7 @@ public class FileRead {
 					if(!queue.contains(co) && !visited.contains(co)) {
 						co.calcG(starts);
 						co.calcH(goal);
+						co.setPrev(visited.get(visited.size()-1));
 						queue.add(co);
 					}
 				}
@@ -401,29 +403,41 @@ public class FileRead {
 
 	}
 	public static void route(Cords[][][] map, ArrayList<Cords> visited) {
-		Cords f = visited.get(visited.size()-1);
-		for(int l = visited.size()-1; l >= 0; l--) {
-			if(visited.get(l).isSame(f)) {
-				int x = f.getRow();
-				int y = f.getCol();
-				int z = f.getLayer();
-				map[x][y][z].setSym("+");
-				System.out.println(f.getPrev());
-				f = f.getPrev();
-			}
+		    Cords f = visited.get(visited.size() - 1);
+		    ArrayList<Cords> seen = new ArrayList<>();
+		    int steps = 0;
+
+		    while (f != null) {
+		        boolean cycle = false;
+		        for (Cords s : seen) {
+		            if (s.isSame(f)) {
+		                cycle = true;
+		                break;
+		            }
+		        }
+		        if (cycle) break;
+
+		        seen.add(f);
+		        int x = f.getRow();
+		        int y = f.getCol();
+		        int z = f.getLayer();
+		        map[x][y][z].setSym("+");
+		        f = f.getPrev();
+		        steps++;
+		    }
+
+		    System.out.println("Total steps: " + steps);
+
+		    for (int i = 0; i < map[0][0].length; i++) {
+		        for (int j = 0; j < map.length; j++) {
+		            String a = "";
+		            for (int k = 0; k < map[0].length; k++) {
+		                a += map[j][k][i].getSym() + " ";
+		            }
+		            System.out.println(a);
+		        }
+		        System.out.println(" ");
+		    }
 		}
-		for(int i = 0; i < map[0][0].length; i++) {
-			for(int j = 0; j < map.length; j++) {
-				String a = "";
-				for(int k = 0; k < map[0].length; k++) {
-					Cords loc = map[j][k][i];
-					a += loc.getSym() + " ";
-				}
-				System.out.println(a);
-			}
-			System.out.println(" ");
-		}
-		
-	}
-	
+
 }

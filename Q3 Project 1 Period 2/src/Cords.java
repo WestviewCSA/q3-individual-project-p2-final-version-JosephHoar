@@ -7,6 +7,7 @@ public class Cords {
 	private Cords prev;
 	private int h;
 	private int g;
+	private boolean visited;
 	
 	public Cords(int xa, int ya, int za, String sym) {
 		x = xa;
@@ -16,6 +17,7 @@ public class Cords {
 		prev = null;
 		h = 0;
 		g = 0;
+		visited = false;
 	}
 	public int getRow() {
 		return x;
@@ -65,11 +67,10 @@ public class Cords {
 		}
 	}
 	public boolean isSame(Cords i) {
-		if(i.getCol() == getCol() && i.getCol() == getRow() && i.getLayer() == getLayer()) {
+		if(i.getCol() == getCol() && i.getRow() == getRow() && i.getLayer() == getLayer()) {
 			return true;
 		}else {
 			return false;
 		}
 	}
-
 }
