@@ -444,7 +444,7 @@ public class p1 {
 	public static void route(Cords[][][] map, ArrayList<Cords> visited) {
 		    Cords f = visited.get(visited.size() - 1);
 		    ArrayList<Cords> seen = new ArrayList<>();
-		    int steps = 0;
+		    
 
 		    while (f != null) {
 		        boolean cycle = false;
@@ -462,10 +462,9 @@ public class p1 {
 		        int z = f.getLayer();
 		        map[x][y][z].setSym("+");
 		        f = f.getPrev();
-		        steps++;
 		    }
 
-		    System.out.println("Total steps: " + steps);
+		   
 
 		    for (int i = 0; i < map[0][0].length; i++) {
 		        for (int j = 0; j < map.length; j++) {
@@ -481,7 +480,6 @@ public class p1 {
 	public static void routeCords(Cords[][][] map, ArrayList<Cords> visited) {
 	    Cords f = visited.get(visited.size() - 1);
 	    ArrayList<Cords> seen = new ArrayList<>();
-	    int steps = 0;
 
 	    while (f != null) {
 	        boolean cycle = false;
@@ -499,11 +497,7 @@ public class p1 {
 	        int z = f.getLayer();
 	        map[x][y][z].setSym("+");
 	        f = f.getPrev();
-	        steps++;
 	    }
-
-	    System.out.println("Total steps: " + steps);
-
 	    for (Cords c : seen) {
 	    	System.out.println(c.getSym() + " " + c.getRow() + " " + c.getCol() + " " + c.getLayer());
 	    }
