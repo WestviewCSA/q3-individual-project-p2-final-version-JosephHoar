@@ -12,41 +12,41 @@ public class p1 {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		if(args.length > 0) {
-			File mapa = new File(args[0]);
+			File mapa = new File(args[args.length-1]);
 			Cords[][][] coord = file(mapa);
 			if(coord != null) {
-				if(args[1].equalsIgnoreCase("Queue")) {
+				if(args[0].equalsIgnoreCase("Queue")) {
 					long start = System.nanoTime();
 					ArrayList<Cords> visited = queueRoute(coord);
 					long end = System.nanoTime();
 					System.out.println("Runtime: " + (end - start));
-					if(args[2].equalsIgnoreCase("Incoordinates")) {
+					if(args[1].equalsIgnoreCase("Incoordinates")) {
 						routeCords(coord, visited);
-					}else if(args[2].equalsIgnoreCase("Outcoordinates")) {
+					}else if(args[1].equalsIgnoreCase("Outcoordinates")) {
 						route(coord, visited);
 					}else {
 						System.out.println("Please enter how you would like your output");
 					}
-				}else if(args[1].equalsIgnoreCase("Stack")) {
+				}else if(args[0].equalsIgnoreCase("Stack")) {
 					long start = System.nanoTime();
 					ArrayList<Cords> visited = stackRoute(coord);
 					long end = System.nanoTime();
 					System.out.println("Runtime: " + (end - start));
-					if(args[2].equalsIgnoreCase("Incoordinates")) {
+					if(args[1].equalsIgnoreCase("Incoordinates")) {
 						routeCords(coord, visited);
-					}else if(args[2].equalsIgnoreCase("Outcoordinates")) {
+					}else if(args[1].equalsIgnoreCase("Outcoordinates")) {
 						route(coord, visited);
 					}else {
 						System.out.println("Please enter how you would like your output");
 					}
-				}else if(args[1].equalsIgnoreCase("Opt")) {
+				}else if(args[0].equalsIgnoreCase("Opt")) {
 					long start = System.nanoTime();
 					ArrayList<Cords> visited = AStar(coord);
 					long end = System.nanoTime();
 					System.out.println("Runtime: " + (end - start));
-					if(args[2].equalsIgnoreCase("Incoordinates")) {
+					if(args[1].equalsIgnoreCase("Incoordinates")) {
 						routeCords(coord, visited);
-					}else if(args[2].equalsIgnoreCase("Outcoordinates")) {
+					}else if(args[1].equalsIgnoreCase("Outcoordinates")) {
 						route(coord, visited);
 					}else {
 						System.out.println("Please enter how you would like your output");
