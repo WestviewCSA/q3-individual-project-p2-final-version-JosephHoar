@@ -7,7 +7,7 @@ import java.util.Queue;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.Comparator;
-public class FileRead {
+public class p1 {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -15,10 +15,48 @@ public class FileRead {
 			File mapa = new File(args[0]);
 			Cords[][][] coord = file(mapa);
 			if(coord != null) {
-				ArrayList<Cords> visited = AStar(coord);
+				if(args[1].equalsIgnoreCase("Queue")) {
+					long start = System.nanoTime();
+					ArrayList<Cords> visited = queueRoute(coord);
+					long end = System.nanoTime();
+					System.out.println("Runtime: " + (end - start));
+					if(args[2].equalsIgnoreCase("Incoordinates")) {
+						routeCords(coord, visited);
+					}else if(args[2].equalsIgnoreCase("Outcoordinates")) {
+						route(coord, visited);
+					}else {
+						System.out.println("Please enter how you would like your output");
+					}
+				}else if(args[1].equalsIgnoreCase("Stack")) {
+					long start = System.nanoTime();
+					ArrayList<Cords> visited = stackRoute(coord);
+					long end = System.nanoTime();
+					System.out.println("Runtime: " + (end - start));
+					if(args[2].equalsIgnoreCase("Incoordinates")) {
+						routeCords(coord, visited);
+					}else if(args[2].equalsIgnoreCase("Outcoordinates")) {
+						route(coord, visited);
+					}else {
+						System.out.println("Please enter how you would like your output");
+					}
+				}else if(args[1].equalsIgnoreCase("Opt")) {
+					long start = System.nanoTime();
+					ArrayList<Cords> visited = AStar(coord);
+					long end = System.nanoTime();
+					System.out.println("Runtime: " + (end - start));
+					if(args[2].equalsIgnoreCase("Incoordinates")) {
+						routeCords(coord, visited);
+					}else if(args[2].equalsIgnoreCase("Outcoordinates")) {
+						route(coord, visited);
+					}else {
+						System.out.println("Please enter how you would like your output");
+					}
+				}else {
+					System.out.println("Please enter a valid input: Queue, Stack, A* or Astar. Null will produce A*");
+				}
 			}
 		}else {
-			System.out.println("File Not Found");
+			System.out.println("Please enter command lines");
 		}
 		
 
@@ -34,6 +72,10 @@ public class FileRead {
 				for(int j = 0; j < h; j++) {
 					for(int k = 0; k < w; k++) {
 						Cords loc = new Cords(j,k,i,scan.next());
+						if(!loc.getSym().equals(".") && !loc.getSym().equals("@") && !loc.getSym().equals("|") && !loc.getSym().equals("$") && !loc.getSym().equals("W")) {
+							System.out.println("Illegal character detected please enter a valid map");
+							return null;
+						}
 						coords[j][k][i] = loc;
 					}
 				}
@@ -46,7 +88,7 @@ public class FileRead {
 		}
 		}
 	public static ArrayList<String> cords(String[][][] a) {
-		ArrayList<String> b = new ArrayList<String>();
+		ArrayList<String> b = new ArrayList<String>(); 
 		for(int i = 0; i < a[0][0].length; i++) {
 			for(int j = 0; j < a.length; j++) {
 				for(int k = 0; k < a[0].length; k++) {
@@ -63,7 +105,7 @@ public class FileRead {
 		String[][][] res = new String[map.length][map[0].length][map[0][0].length];
 		for(int i = 0; i < map[0][0].length; i++) {
 			for(int j = 0; j < map.length; j++) {
-				for(int k = 0; k < map[0].length; k++) {
+				for(int k = 0; k < map[0].length; k++) { 
 					String s = map[j][k][i] + " " + j + " " + k + " " + i;
 					res[j][k][i] = s;
 						//System.out.println(res[j][k][i]);
@@ -197,7 +239,6 @@ public class FileRead {
 			}
 			
 		}
-		route(map,visited);
 		return visited;
 	}
 	public static ArrayList<Cords> stackRoute(Cords[][][] map){
@@ -289,7 +330,6 @@ public class FileRead {
 			}
 			}
 		}
-		route(map,visited);
 		return visited;
 		
 	}
@@ -398,7 +438,6 @@ public class FileRead {
 			}
 			
 		}
-		route(map,visited);
 		return visited;
 
 	}
@@ -439,5 +478,37 @@ public class FileRead {
 		        System.out.println(" ");
 		    }
 		}
+	public static void routeCords(Cords[][][] map, ArrayList<Cords> visited) {
+	    Cords f = visited.get(visited.size() - 1);
+	    ArrayList<Cords> seen = new ArrayList<>();
+	    int steps = 0;
+
+	    while (f != null) {
+	        boolean cycle = false;
+	        for (Cords s : seen) {
+	            if (s.isSame(f)) {
+	                cycle = true;
+	                break;
+	            }
+	        }
+	        if (cycle) break;
+
+	        seen.add(f);
+	        int x = f.getRow();
+	        int y = f.getCol();
+	        int z = f.getLayer();
+	        map[x][y][z].setSym("+");
+	        f = f.getPrev();
+	        steps++;
+	    }
+
+	    System.out.println("Total steps: " + steps);
+
+	    for (Cords c : seen) {
+	    	System.out.println(c.getSym() + " " + c.getRow() + " " + c.getCol() + " " + c.getLayer());
+	    }
+	       
+	}
+	  
 
 }
